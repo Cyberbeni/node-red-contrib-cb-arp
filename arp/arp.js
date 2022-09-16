@@ -22,7 +22,6 @@ module.exports = function(RED) {
 
 	function ARP(n) {
 		RED.nodes.createNode(this, n);
-		this.name = n.name;
 		this.macs = n.macs;
 		let node = this;
 
@@ -39,7 +38,7 @@ module.exports = function(RED) {
 						if (!details.internal && details.family === "IPv4") {
 
 							let ping = 'echo $(seq 254) | xargs -P255 -I% -d" " ping -W 1 -c 1 ';
-							ping += details.address.substr(0, details.address.lastIndexOf(".") + 1) + '%';
+							ping += details.address.substring(0, details.address.lastIndexOf(".") + 1) + '%';
 							ping += ' | grep -E "[0-1].*?:"';
 
 							node.status({ fill: "yellow", shape: "dot", text: "running" });
