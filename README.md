@@ -5,22 +5,19 @@ It returns the mapping of the network address (IP address) to a physical address
 
 ### Prerequisites
 
-- Node.js v8.10 or later
+- Node.js v16.17 or later
 
 ### Install
 
 From your node-red directory:
 
-    npm install node-red-contrib-arp
-    
+    npm install node-red-contrib-cb-arp
+
 or
-    
-in the Node-red, Manage palette, Install node-red-contrib-arp
 
-
+in the Node-red, Manage palette, Install node-red-contrib-cb-arp
 
 ### Usage
-
 
 This node provides the content of the ARP table.
 
@@ -38,4 +35,3 @@ It is possible to filter the results by MAC address :<br>
 ### License 
 
 MIT License
-     
