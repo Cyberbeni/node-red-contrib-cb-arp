@@ -27,10 +27,10 @@ The output **msg.payload** is an array of objects containing : <br>
 - mac : the MAC address of the device.
 - iface : the network interface of the device.
 
-It is possible to filter the results by MAC address :<br>
+It is possible to filter the results by IP address :<br>
 
-- in the node configuration, by providing MAC address (separated by commas if multiple).
-- in the input **msg.payload.macs** message string, by providing MAC address (separated by commas if multiple).
+- in the node configuration, by providing IP address (separated by commas if multiple).
+- in the input **msg.payload.ips** message string, by providing IP address (separated by commas if multiple).
 
 ### License 
 
