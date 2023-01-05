@@ -4,8 +4,8 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
   	<div class="form-row">
-        <label for="node-input-macs"><i class="icon-tag"></i>MAC address</label>
-        <input type="text" id="node-input-macs" placeholder="00:00:00:00:00:00">
+        <label for="node-input-ips"><i class="icon-tag"></i>IP address</label>
+        <input type="text" id="node-input-ips" placeholder="192.168.1.1">
     </div>
 </script>
 
@@ -18,10 +18,10 @@
         <li>mac : the MAC address of the device.</li>
         <li>iface : the network interface of the device.</li>
     </ul>
-	<p>It is possible to filter the results by MAC address :</p>
+	<p>It is possible to filter the results by IP address :</p>
  	<ul>
-        <li>in the node configuration, by providing MAC address (separated by commas if multiple).</li>
-        <li>in the input <b>msg.payload.macs</b> message string, by providing MAC address (separated by commas if multiple).</li>
+        <li>in the node configuration, by providing IP address (separated by commas if multiple).</li>
+        <li>in the input <b>msg.payload.ips</b> message string, by providing IP address (separated by commas if multiple).</li>
     </ul>
 </script>
 
@@ -31,7 +31,7 @@
         color:"#3fadb5",
         defaults: {
             name: {value:"ARP"},
-            macs: {value:""}
+            ips: {value:""}
         },
         inputs:1,
         outputs:1,

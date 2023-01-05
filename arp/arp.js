@@ -20,38 +20,42 @@ module.exports = function(RED) {
 		}
 	};
 
-	function ARP(n) {
-		RED.nodes.createNode(this, n);
-		this.macs = n.macs;
-		let node = this;
+	function ARP(config) {
+		RED.nodes.createNode(this, config);
+		let node = this
+		let ipConfig = config.ips
 
 		node.on("input", function(msg) {
 			if (msg && msg.payload) {
-				node.macs = msg.payload.macs || node.macs;
+				node.status({ fill: "yellow", shape: "dot", text: "running" });
 
-				const interfaces = os.networkInterfaces();
+				ipConfig = msg.payload.ips || ipConfig
+				const ips = ipConfig ? ipConfig.split(",") : undefined
 
-				Object.keys(interfaces).forEach(function(inter) {
-
-					interfaces[inter].forEach(function(details) {
-
-						if (!details.internal && details.family === "IPv4") {
-
-							let ping = 'echo $(seq 254) | xargs -P255 -I% -d" " ping -W 1 -c 1 ';
-							ping += details.address.substring(0, details.address.lastIndexOf(".") + 1) + '%';
-							ping += ' | grep -E "[0-1].*?:"';
-
-							node.status({ fill: "yellow", shape: "dot", text: "running" });
-
-							exec(ping, function(error, stdout, stderr) {
-								if (error) {
-									return;
-								}
-							});
+				if (ips) {
+					let ping = `echo ${ips.join(" ")} | xargs -P255 -I% -d" " ping -W 1 -c 1 % | grep -E "[0-1].*?:"`
+					exec(ping, function(error, stdout, stderr) {
+						if (error) {
+							return;
 						}
 					});
-
-				});
+				} else {
+					const interfaces = os.networkInterfaces()
+					Object.keys(interfaces).forEach(function(inter) {
+						interfaces[inter].forEach(function(details) {
+							if (!details.internal && details.family === "IPv4") {
+								let ping = 'echo $(seq 254) | xargs -P255 -I% -d" " ping -W 1 -c 1 ';
+								ping += details.address.substring(0, details.address.lastIndexOf(".") + 1) + '%';
+								ping += ' | grep -E "[0-1].*?:"';
+								exec(ping, function(error, stdout, stderr) {
+									if (error) {
+										return;
+									}
+								});
+							}
+						});
+					});
+				}
 				
 				const execF = new PromiseFunc();
 				execF.execCommand("arp -n").then(function(res) {
@@ -87,8 +91,8 @@ module.exports = function(RED) {
 							if (ip.length) {
 								const arpEntry = { ip, mac, iface };
 
-								if (node.macs) {
-									if (node.macs.toLowerCase().includes(mac)) {
+								if (ips) {
+									if (ips.includes(ip)) {
 										arpEntries.push(arpEntry);
 									}
 								} else {
@@ -96,22 +100,18 @@ module.exports = function(RED) {
 								}
 							}
 						}
-
 						msg.payload = arpEntries;
 						return node.send(msg);
 					}
-
 				}).catch(function(err) {
 					node.status({ fill: "red", shape: "dot", text: "error" });
 					node.error(err);
 					msg.payload.error = err;
 					return node.send(msg);
 				});
-
 			}
 		});
 
 	}
 	RED.nodes.registerType("arp", ARP);
-
 };
