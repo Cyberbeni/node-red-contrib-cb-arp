@@ -5,7 +5,7 @@ It returns the mapping of the network address (IP address) to a physical address
 
 ### Prerequisites
 
-- Node.js v16.17 or later
+- Node.js v16 or later
 
 ### Install
 
