@@ -75,7 +75,7 @@ module.exports = function(RED) {
 
 							for (const col of cols) {
 								if (col.includes(".")) {
-									ip = col;
+									ip = col.replaceAll(/[()]/g, "");
 									continue;
 								}
 								if (col.includes(":")) {
