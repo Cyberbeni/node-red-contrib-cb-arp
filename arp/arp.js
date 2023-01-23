@@ -33,25 +33,16 @@ module.exports = function(RED) {
 				const ips = ipConfig ? ipConfig.split(",") : undefined
 
 				if (ips) {
-					let ping = `echo ${ips.join(" ")} | xargs -P255 -I% -d" " ping -W 1 -c 1 % | grep -E "[0-1].*?:"`
-					exec(ping, function(error, stdout, stderr) {
-						if (error) {
-							return;
-						}
-					});
+					let ping = `echo -n ${ips.join(" ")} | tr " " "\n" | xargs -n1 -P255 ping -W 1 -c 1`
+					exec(ping);
 				} else {
 					const interfaces = os.networkInterfaces()
 					Object.keys(interfaces).forEach(function(inter) {
 						interfaces[inter].forEach(function(details) {
 							if (!details.internal && details.family === "IPv4") {
-								let ping = 'echo $(seq 254) | xargs -P255 -I% -d" " ping -W 1 -c 1 ';
-								ping += details.address.substring(0, details.address.lastIndexOf(".") + 1) + '%';
-								ping += ' | grep -E "[0-1].*?:"';
-								exec(ping, function(error, stdout, stderr) {
-									if (error) {
-										return;
-									}
-								});
+								let prefix = details.address.substring(0, details.address.lastIndexOf(".") + 1)
+								let ping = `echo -n ${Array.from({length: 254}, (_, i) => `${prefix}${i + 1}`).join(" ")} | tr " " "\n" | xargs -n1 -P255 ping -W 1 -c 1`;
+								exec(ping);
 							}
 						});
 					});
