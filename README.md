@@ -1,3 +1,7 @@
+# Deprecated
+
+I am moving away from Node-RED, so I won't be maintaining this package anymore. I am currently remaking (network) presence detection in a separate docker container that uses HomeAssistant's MQTT autodiscovery to connect the information with everything else: https://github.com/Cyberbeni/Wiring
+
 # node-red-contrib-cb-arp
 
 This node provides the content of the ARP table.<br>
